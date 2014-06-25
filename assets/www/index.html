@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Localizador</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1"> 
+
+        <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.3.0.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        
+
+        <link rel="stylesheet" href="css/jquery.mobile-1.3.0.css" type="text/css"> 
+        <link rel="stylesheet" href="css/jquery.mobile.theme-1.3.0.css" type="text/css"> 
+        
+        <style>
+            .is-body
+            {
+                
+                background-image: 
+                    url('./assets/img/localizador_bg_img_2.jpg');
+            }
+            .is-header
+            {
+                background-image: none;
+                width: 100%;position:relative;
+                height: 50px;
+                background-color: #fff;
+                margin-bottom: 20px;
+                border-top: 0;
+                -moz-box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                -webkit-box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                padding-top: 20px;
+            }
+        </style>
+    </head>
+    <body id="gt">
+
+		<!--Home-->
+         <div data-role="page" id="home_page" class="is-body" data-theme="b">
+            <div data-role="header" data-theme="d" class="is-header">
+                <h1>Localizador</h1>
+                <img style="width:48px;padding: 0px;margin-top: -80px" src="./assets/img/kview.png"/>
+                <a href="#" style="visibility:hidden"></a>
+            </div>
+            
+            <div data-role="content">
+                <p>
+                    <a href="#new_page" data-role="button" data-mini="false" data-inline="false" data-iconpos="bottom" data-icon="plus">Novo</a>
+                    <a href="#list_page" data-role="button" data-mini="false" data-inline="false" data-iconpos="bottom" data-icon="bars" data-theme="a">Lista</a>
+                </p>
+            </div>
+            
+                <div data-role="footer" data-theme="d" data-position="fixed" style="height:40px" >
+                   <a href="#" data-role="button" data-icon="refresh" class="refresh" data-iconpos="notext" data-theme="b" style="margin-top: 5px;float:left">Atualizar</a>
+                    <a href="#about_page" data-role="button" data-icon="arrow-l"  data-theme="b" style="margin-top: 5px;float: right">Sobre</a>
+                </div>
+        </div>
+        <!--/Home-->
+        
+        <!--Novo-->
+        
+        <div data-role="page" id="new_page" class="is-body" data-theme="b">
+            <div data-role="header" data-theme="d" class="is-header">
+                 <h1><i>Novo</i></h1>
+                <a href="#home_page" data-role="button" data-icon="arrow-l" data-theme="b" style="margin-top: 15px">Voltar</a>
+            </div>
+            
+             <div data-role="content">
+                    <h3>Nome </h3>
+                    <!--<form id="new_object_form">-->
+                    <input type="text" name="object_name" data-theme="e" id="name" placeholder="Insert here the object name. ex.: my glasses" required="required">
+                    <button data-role="button" id="photo" data-mini="true" data-inline="true">Fotografar</button>
+                    <button data-role="button" id="getPosition-btn" data-mini="true" data-inline="true" data-theme="e">Localização</button>
+                    <a data-role='button' data-icon='check' id="save-object" data-theme='a'>Salvar !</a>
+                    <!--</form>-->
+            </div>
+            
+             <div data-role="footer" data-theme="d" data-position="fixed" style="height:40px" >
+                   <a href="#" data-role="button" data-icon="refresh" class="refresh" data-iconpos="notext" data-theme="e" style="margin-top: 5px;float:left">Atualizar</a>
+                    <a href="#about_page" data-role="button" data-icon="arrow-l"  data-theme="b" style="margin-top: 5px;float: right">Sobre</a>
+                </div>
+        </div>
+               
+        <!--/Novo-->
+        
+        <!--Lista-->  
+        <div data-role="page" id="list_page" class="is-body" data-theme="b">
+            <div data-role="header" data-theme="d" class="is-header">
+                <h1><i>Lista</i></h1>
+                 <a href="#home_page" data-role="button" data-icon="arrow-l" data-theme="b" style="margin-top: 15px">Voltar</a>
+            </div>
+
+            <div data-role="content">
+               <table id="table-objects" data-role="table"  data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="a" data-column-btn-text="Esconder / Mostrar coluna" data-column-popup-theme="a">
+                    <thead>
+                        <tr class="ui-bar-d"> 
+                            <th data-priority="1">Data</th>
+                            <th data-priority="1">Objeto</th>
+                            <th data-priority="1">Onde?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-of-objects">
+                    </tbody>
+                </table>
+            </div>
+                <div data-role="footer" data-theme="d" data-position="fixed" style="height:40px" >
+                   <a href="#" data-role="button" data-icon="refresh" class="refresh" data-iconpos="notext" data-theme="b" style="margin-top: 5px;float:left">Atualizar</a>
+                    <a href="#about_page" data-role="button" data-icon="arrow-l"  data-theme="b" style="margin-top: 5px;float: right">Sobre</a>
+                </div>
+        </div>
+
+	<!--/Lista-->
+
+        <!--dialog-->
+                    <div data-role="page" id="dialogPage">
+                  <div data-role="header">
+                    <h2 id="object-title-dialog"></h2>
+                  </div>
+                  <div data-role="content">
+                    <p  id="object-content-dialog"></p>
+                    <img  id="object-image-dialog" src="" alt="img">
+                  </div>
+                </div>
+ <!--/cdialog-->
+
+
+        
+         <div data-role="page" id="about_page" class="is-body" data-theme="b">
+            <div data-role="header" data-theme="d" class="is-header">
+                <h1><i>Desenvolvedores</i></h1>
+                 <a href="#home_page" data-role="button" data-icon="arrow-l" data-theme="b" style="margin-top: 15px">Inicio</a>
+            </div>
+            
+             <div data-role="content" >
+                 <ul data-role="listview" data-theme="c">
+                     <li><h4><a href="#"  data-role="button"  data-theme="e" data-icon="info">Altair Texeira</a>    * <sub>Design / Programing / Documentation</sub></h4></li>
+                 </ul>
+             </div>
+         </div>
+        <script type="text/javascript" charset="utf-8" src="js/localizador.js"></script>
+    </body>
+    
+</html>

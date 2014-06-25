@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Localizador</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1"> 
+
+        <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.3.0.js"></script>
+        <script type="text/javascript" src="./js/functions.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/cordova-2.7.0.js"></script>
+        
+        <link rel="stylesheet" href="css/jquery.mobile-1.3.0.css" type="text/css"> 
+        <link rel="stylesheet" href="css/jquery.mobile.theme-1.3.0.css" type="text/css"> 
+        <link rel="stylesheet" href="css/index.css" type="text/css">
+        
+        <style>
+            .is-body
+            {
+                
+                background-image: 
+                    url('./assets/img/localizador_bg_img_2.jpg');
+            }
+            .is-header
+            {
+                background-image: none;
+                width: 100%;position:relative;
+                height: 50px;
+                background-color: #fff;
+                margin-bottom: 20px;
+                border-top: 0;
+                -moz-box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                -webkit-box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                padding-top: 20px;
+            }
+        </style>
+    </head>
+    
+    <body >
+        <!--onload="javascript:onLoad()" >-->
+		
+        <div data-role="page" id="home_page" class="is-body" data-theme="b">
+            <div data-role="header" data-theme="d" class="is-header">
+                <h1><i>Ver</i>></h1>
+                <!--<img style="width:48px;padding: 0px;margin-top: -80px;" onclick="javascript:document.location='index.html';" src="./assets/img/kview.png"/>-->
+                 <a href="index.html" style="margin-top: 15px">Voltar</a>
+                <a href="#" data-role="button" data-icon="delete" data-theme="b" style="background-color:#ccc;border:1px solid #555555;text-shadow: rgba(255, 255, 255, 0.498039) 0px 1px 0px;box-shadow: rgba(255, 255, 255, 0.498039) 0px 1px 0px;color:#555555;background-image: none;margin-top: 15px" onclick="javascript:navigator.device.exitApp();">Sair</a>
+            </div>
+            
+            <div data-role="content">
+                <!--<img style="" id="falcon-img" src="./assets/img/kview.png" />-->
+               <table data-role="table"  data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="a" data-column-btn-text="Esconder / Mostrar coluna" data-column-popup-theme="a">
+                    <thead>
+                        <tr class="ui-bar-d"> 
+                            <th data-priority="2">Objeto</th>
+                            <th data-priority="1">Data</th>
+                            <th data-priority="3">Opções</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>My glasses</td>
+                            <td>05-06-2014</td>
+                            <td>
+                                <a href="delObject.html" data-iconpos="notext" data-theme="c" data-inline="true" data-role="button" data-icon="delete">Deletar</a>
+                                <!--<a href="delObject.html" data-role="button" data-iconpos="notext" data-theme="c" data-inline="true" data-icon="delete">s</a>-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                <div data-role="footer" data-theme="d" style="text-align: right">
+                    <button data-role="button" data-theme="c" data-mini="true">Sobre</button>
+                </div>
+        </div>
+        
+        <!--
+            <script type="text/javascript">
+               document.addEventListener("deviceready",function(){$('body').__construct()},false);
+               $('#getImage').click(function(){$(this).falconCapture();});
+            </script>
+        -->
+      
+	</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Localizador</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1"> 
+
+        <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.3.0.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        
+        <link rel="stylesheet" href="css/jquery.mobile-1.3.0.css" type="text/css"> 
+        <link rel="stylesheet" href="css/jquery.mobile.theme-1.3.0.css" type="text/css"> 
+        
+        <style>
+            .is-body
+            {
+                
+                background-image: 
+                    url('./assets/img/localizador_bg_img_2.jpg');
+            }
+            .is-header
+            {
+                background-image: none;
+                width: 100%;position:relative;
+                height: 50px;
+                background-color: #fff;
+                margin-bottom: 20px;
+                border-top: 0;
+                -moz-box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                -webkit-box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                box-shadow: inset 0 2px 2px -2px #777,2px 1px #fff;
+                padding-top: 20px;
+            }
+        </style>
+    </head>
+    <body id="gt">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        COD
+                    </th>
+                     <th>
+                        Name
+                    </th>
+                     <th>
+                        View
+                    </th>
+                </tr>
+            </thead>
+            <tbody  id="table-of-objects">
+             
+            </tbody>
+        </table>
+        <div id="sql_console">
+
+        </div>
+
+        <div id="div_photo">
+            <img id="_photo" alt="foto" src="">
+        </div>
+        <div id="_gps">
+            
+        </div>
+        <div id="_db">
+            
+        </div>
+        <button data-role="button" data-mini="true" data-inline="true" data-theme="e" id="photo">Photo</button>
+        <button data-role="button" data-mini="true" data-inline="true" data-theme="e" id="gps">Gps</button>
+        <input type="text" name="nome" id="nome">
+        <input type="text" id="sql">
+        <button data-role="button" data-mini="true" data-inline="true" data-theme="e" id="db">DB</button>
+        <button id="show-img">show img</button>
+        
+        <script type="text/javascript">
+
+                var $img = null;
+
+                $(document).ready(function(){
+
+                    function dbInit(ob)
+                    {
+                         ob.executeSql('CREATE TABLE IF NOT EXISTS objects (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT DEFAULT "null", src TEXT DEFAULT "null", gps TEXT  DEFAULT "null")');
+                    }
+                    function getDB()
+                    {
+                        //var db = 
+                        return window.openDatabase("Database", "1.0", "Localizador Database", 900000);
+                    }
+
+                    function populateDB(tx)
+                    {
+                        dbInit(tx);
+                    }   
+
+               
+
+                // Query the database
+                //
+                function queryDB(tx) {
+                    //var qry = qry!=null||qry!=undefined?qry:'SELECT * FROM objects';
+                    //tx.executeSql('SELECT * FROM objects', [], querySuccess, errorCB);
+                    //tx.executeSql(qry, [], querySuccess, errorCB);
+                }
+
+                // Query the success callback
+                //
+                function querySuccess(tx, results) {
+                    var len = results.rows.length;
+            //        console.log("objects table: " + len + " rows found.");
+                    $("#sql_console").html("objects table: " + len + " rows found.");
+                    for (var i=0; i<len; i++){
+                       $("#sql_console").append("<br/>Row = " + i + " <br/>ID = " + results.rows.item(i).id + " nome =  " + results.rows.item(i).nome+'<br/>'+ " src =  " +results.rows.item(i).src+'<br/>'+ " gps =  " +results.rows.item(i).gps);
+                    }
+                }
+
+                // Transaction error callback
+                //
+                function errorCB(err) {
+                    console.log("Error processing SQL: "+err.code);
+                     alert('code: '    + err.code    + '\n' +
+                            'message: ' + err.message + '\n');
+                }
+
+                // Transaction success callback
+                //
+                function successCB() {
+                   // var db = window.openDatabase("Database", "1.0", "Falcon Finder Database", 900000);
+                    //db.transaction(queryDB, errorCB);
+                    getDB().transaction(queryDB, errorCB);
+                }
+
+                // Cordova is ready
+                //
+                function onDeviceReady() {
+                    //var db = window.openDatabase("Database", "1.0", "Falcon Finder Database", 900000);
+                    getDB().transaction(populateDB, errorCB, successCB);
+                    getObjects();
+                   // db.transaction(populateDB, errorCB, successCB);
+                }
+
+
+/*
+Photo
+*/
+
+                function takeImage() {         
+                    var opt = {
+                        quality: 50,
+                        destinationType: navigator.camera.DestinationType.FILE_URI,
+                        sourceType : Camera.PictureSourceType.CAMERA, 
+                        allowEdit : true,
+                        encodingType: Camera.EncodingType.JPEG,
+                        targetWidth: 100,
+                        targetHeight: 100
+                        };
+                        return navigator.camera.getPicture(newImage, errorCB, opt);
+                }
+
+                function newImage(src)
+                {
+                        //$img   =   $('#_photo').attr('src',src);
+
+                        getDB().transaction(function(tx){
+                                dbInit(tx);
+                                tx.executeSql('INSERT INTO objects (src,nome,gps) VALUES ("'+ src +'","nome","gps")');
+                        }, errorCB, successCB);
+                }
+                function showImage(id)
+                {
+                   
+          
+                    var _Query  =   "select src from objects where id = "+id;
+                  
+                    console.log(_Query)
+                    getDB().transaction(function(tx){
+                            dbInit(tx);
+                            tx.executeSql(_Query, [],
+                                function(qr,rs){
+                                    
+                                    var len = rs.rows.length;
+
+                                    for (var i=0; i<len; i++){
+                                        $('#_photo').attr('src',rs.rows.item(i).src);
+                                        $("#sql_console").append("<br/> IMAGE SRC: "+rs.rows.item(i).src)
+                                    }
+                            }, errorCB);
+                    }, errorCB, successCB);
+
+                    //$('#_photo').attr('src',src);
+                }
+
+/*getObjects*/
+                function getObjects()
+                {
+                   
+                    $("#table-of-objects").html('');
+
+                    var _Query  =   "select * from objects";
+                  
+                    console.log(_Query)
+                    getDB().transaction(function(tx){
+                            dbInit(tx);
+                            tx.executeSql(_Query, [],
+                                function(qr,rs){
+                                    
+                                    var len = rs.rows.length;
+
+                                    for (var i=0; i<len; i++){
+                                        $("#table-of-objects").append("<tr><td>"+rs.rows.item(i).id+"</td><td>"+rs.rows.item(i).nome+"</td><td><a href='#view_object' data-id='"+rs.rows.item(i).id+"'>View</a></td></tr>");
+                                    }
+                            }, errorCB);
+                    }, errorCB, successCB);
+
+                    //$('#_photo').attr('src',src);
+                }
+/* </objects>*/
+
+                function validForm()
+                {
+                    var nome    =   !$('#nome').val()?'':$('#nome').val();
+
+                    if(nome.length>=4)
+                    {
+                        return true;
+                    }
+                    else if(nome.length<1)
+                    {
+                        alert('Por favor, insira um nome!');
+                        $('#nome').focus();
+                        return false;
+                    }
+                    
+                    alert('O nome deve conter mínimo 4 caracteres!');
+                    $('#nome').focus();
+                    return false;
+                }
+
+/*
+ /Photo
+*/
+
+
+
+                $(".show-object").on('click',function(evt){
+                    console.log(this);
+                        //showImage(5);
+                });
+               $("#photo").on('click',function(){
+                    if(validForm())
+                    {
+                        takeImage();
+                    }
+                    else
+                    {
+
+                    }
+               });
+               $("#gps").on('click',function(){
+                   alert($("#_gps").html('gps'));
+               });
+               $("#db").on('click',function(){
+                    
+                    var _Query   =   $('#sql').val();
+
+                    if(validForm())
+                    {
+
+                        getDB().transaction(function(tx){
+                            dbInit(tx);
+                            tx.executeSql(_Query, [], querySuccess, errorCB);
+                        }, errorCB, successCB);
+
+                        $('#_db').append('sql:' + _Query + '. <br/>');
+                    }
+               });
+
+$("#gt").on('click',function(){getObjects()});
+            /* $("#db").on('click',function(){
+                                
+                                var testQuery   =   $('#sql').val();
+
+                                var nome    =   !$('#nome').val()?'':$('#nome').val();
+
+                                if(nome.length<=2)
+                                {
+                                    alert('Preencha o nome do objeto');
+                                    return false;
+                                }
+
+                                
+                                getDB().transaction(function(tx){
+                                                    //tx.executeSql('DROP TABLE IF EXISTS objects');
+                                                    //tx.executeSql('CREATE TABLE IF NOT EXISTS objects (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT, src TEXT, gps TEXT )');
+                                                    dbInit(tx);
+                                                    tx.executeSql(new falconObjects(nome,gps,foto), [], querySuccess, errorCB);
+
+                                            }, errorCB, successCB);
+                                $('#_db').append('testQuery:' + testQuery + '. <br/>');
+               });*/
+
+            });
+        </script>
+    </body>
+    
+</html>
